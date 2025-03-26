@@ -59,6 +59,8 @@ params.snpeff_db               = getGenomeAttribute('snpeff_db')
 params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
 params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
+params.vep_gnomadv3            = getGenomeAttribute('vep_gnomadv3')
+params.vep_gnomadv4            = getGenomeAttribute('vep_gnomadv4')
 
 aligner = params.aligner
 
@@ -116,6 +118,13 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
     vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
     vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
     vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
+}
+
+if (params.vep_gnomadv3 && params.vep_gnomadv4) {
+    vep_extra_files.add(file(params.vep_gnomadv3, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_gnomadv3_tbi, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_gnomadv4, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_gnomadv4_tbi, checkIfExists: true))
 }
 
 /*
