@@ -449,6 +449,42 @@
                     "default": "rs_dbSNP,HGVSc_VEP,HGVSp_VEP,1000Gp3_EAS_AF,1000Gp3_AMR_AF,LRT_score,GERP++_RS,gnomAD_exomes_AF",
                     "help_text": "To be used with `--vep_dbnsfp`.\nThis params can be used to retrieve individual values from the dbNSFP file. The values correspond to the name of the columns in the dbNSFP file and are separated by comma.\nThe column names might differ between the different dbNSFP versions. Please check the Readme.txt file, which is provided with the dbNSFP file, to obtain the correct column names. The Readme file contains also a short description of the provided values and the version of the tools used to generate them.\n\nDefault value are explained below:\n\nrs_dbSNP - rs number from dbSNP\nHGVSc_VEP - HGVS coding variant presentation from VEP. Multiple entries separated by ';', corresponds to Ensembl_transcriptid\nHGVSp_VEP - HGVS protein variant presentation from VEP. Multiple entries separated by ';', corresponds to Ensembl_proteinid\n1000Gp3_EAS_AF - Alternative allele frequency in the 1000Gp3 East Asian descendent samples\n1000Gp3_AMR_AF - Alternative allele counts in the 1000Gp3 American descendent samples\nLRT_score - Original LRT two-sided p-value (LRTori), ranges from 0 to 1\nGERP++_RS - Conservation score. The larger the score, the more conserved the site, ranges from -12.3 to 6.17\ngnomAD_exomes_AF - Alternative allele frequency in the whole gnomAD exome samples."
                 },
+                "vep_mastermind": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to Mastermind processed file.",
+                    "help_text": "Plugin path for Mastermind for searching relevant publicaton regarding variant"
+                },
+                "vep_mastermind_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to Mastermind tabix indexed file.",
+                    "help_text": "To be used with `--vep_mastermind`."
+                },
+                "vep_alphamissense": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to AlphaMissense processed file.",
+                    "help_text": "Plugin path for AlphaMissense predicitons"
+                },
+                "vep_alphamissense_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to AlphaMissense tabix indexed file.",
+                    "help_text": "To be used with `--vep_alphamissense`."
+                },
+                "vep_clinvar": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to ClinVar file.",
+                    "help_text": "For use of ClinVar clinical classification"
+                },
+                "vep_clinvar_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to ClinVar index file.",
+                    "help_text": "To be used with `--vep_clinvar`"
+                },
                 "vep_gnomadv3": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
@@ -472,6 +508,30 @@
                     "fa_icon": "fas fa-file",
                     "description": "Path to gnomADv4 index file.",
                     "help_text": "To be used with `--vep_gnomadv4`"
+                },
+                "vep_dbsnp": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to dbSNP file.",
+                    "help_text": "For use of custom dbSNP file for rs_id"
+                },
+                "vep_dbsnp_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to dbSNP index file.",
+                    "help_text": "To be used with `--vep_dbsnp`"
+                },
+                "vep_mistic": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to MISTIC file.",
+                    "help_text": "For use of custom MISTIC pred score"
+                },
+                "vep_mistic_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to MISTIC index file.",
+                    "help_text": "To be used with `--vep_mistic`"
                 },
                 "vep_loftee": {
                     "type": "boolean",
