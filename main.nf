@@ -59,6 +59,20 @@ params.snpeff_db               = getGenomeAttribute('snpeff_db')
 params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
 params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
+params.vep_mastermind          = getGenomeAttribute('vep_mastermind')
+params.vep_mastermind_tbi      = getGenomeAttribute('vep_mastermind_tbi')
+params.vep_alphamissense       = getGenomeAttribute('vep_alphamissense')
+params.vep_alphamissense_tbi   = getGenomeAttribute('vep_alphamissense_tbi')
+params.vep_clinvar             = getGenomeAttribute('vep_clinvar')
+params.vep_clinvar_tbi         = getGenomeAttribute('vep_clinvar_tbi')
+params.vep_gnomadv3            = getGenomeAttribute('vep_gnomadv3')
+params.vep_gnomadv3_tbi        = getGenomeAttribute('vep_gnomadv3_tbi')
+params.vep_gnomadv4            = getGenomeAttribute('vep_gnomadv4')
+params.vep_gnomadv4_tbi        = getGenomeAttribute('vep_gnomadv4_tbi')
+params.vep_dbsnp               = getGenomeAttribute('vep_dbsnp')
+params.vep_dbsnp_tbi           = getGenomeAttribute('vep_dbsnp_tbi')
+params.vep_mistic              = getGenomeAttribute('vep_mistic')
+params.vep_mistic_tbi          = getGenomeAttribute('vep_mistic_tbi')
 
 aligner = params.aligner
 
@@ -111,11 +125,46 @@ if (params.dbnsfp && params.dbnsfp_tbi) {
     vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
 }
 
+if (params.vep_mastermind && params.vep_mastermind_tbi) {
+    vep_extra_files.add(file(params.vep_mastermind, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_mastermind_tbi, checkIfExists: true))
+}
+
+if (params.vep_alphamissense && params.vep_alphamissense_tbi) {
+    vep_extra_files.add(file(params.vep_alphamissense, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_alphamissense_tbi, checkIfExists: true))
+}
+
+if (params.vep_clinvar && params.vep_clinvar_tbi) {
+    vep_extra_files.add(file(params.vep_clinvar, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_clinvar_tbi, checkIfExists: true))
+}
+
 if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
     vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
     vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
     vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
     vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
+}
+
+if (params.vep_gnomadv3 && params.vep_gnomadv3_tbi) {
+    vep_extra_files.add(file(params.vep_gnomadv3, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_gnomadv3_tbi, checkIfExists: true))
+}
+
+if (params.vep_gnomadv4 && params.vep_gnomadv4_tbi) {
+    vep_extra_files.add(file(params.vep_gnomadv4, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_gnomadv4_tbi, checkIfExists: true))
+}
+
+if (params.vep_dbsnp && params.vep_dbsnp_tbi) {
+    vep_extra_files.add(file(params.vep_dbsnp, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_dbsnp_tbi, checkIfExists: true))
+}
+
+if (params.vep_mistic && params.vep_mistic_tbi) {
+    vep_extra_files.add(file(params.vep_mistic, checkIfExists: true))
+    vep_extra_files.add(file(params.vep_mistic_tbi, checkIfExists: true))
 }
 
 /*
