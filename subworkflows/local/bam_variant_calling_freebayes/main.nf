@@ -5,6 +5,7 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { BCFTOOLS_SORT                         } from '../../../modules/nf-core/bcftools/sort/main'
+include { BCFTOOLS_NORM                         } from '../../../modules/nf-core/bcftools/norm/main'
 include { FREEBAYES                             } from '../../../modules/nf-core/freebayes/main'
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES    } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { TABIX_TABIX     as TABIX_VC_FREEBAYES } from '../../../modules/nf-core/tabix/tabix/main'
@@ -27,7 +28,9 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
 
     FREEBAYES(cram_intervals, fasta, fasta_fai, [[id:'null'], []], [[id:'null'], []], [[id:'null'], []])
 
-    BCFTOOLS_SORT(FREEBAYES.out.vcf)
+    BCFTOOLS_NORM(FREEBAYES.out.vcf)
+
+    BCFTOOLS_SORT(BCFTOOLS_NORM.out.vcf)
 
     // Figuring out if there is one or more vcf(s) from the same sample
     bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{
