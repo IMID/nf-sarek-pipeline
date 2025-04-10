@@ -28,9 +28,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
 
     FREEBAYES(cram_intervals, fasta, fasta_fai, [[id:'null'], []], [[id:'null'], []], [[id:'null'], []])
 
-    BCFTOOLS_NORM(FREEBAYES.out.vcf)
-
-    BCFTOOLS_SORT(BCFTOOLS_NORM.out.vcf)
+    BCFTOOLS_SORT(FREEBAYES.out.vcf)
 
     // Figuring out if there is one or more vcf(s) from the same sample
     bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{
@@ -42,16 +40,20 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     // Only when using intervals
     vcf_to_merge = bcftools_vcf_out.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
     MERGE_FREEBAYES(vcf_to_merge, dict)
-
     // Only when no_intervals
     TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals)
 
+    norm_multi_in = MERGE_FREEBAYES.out.vcf.map{meta, vcf -> return [meta, vcf, []]}
+
+    BCFTOOLS_NORM(norm_multi_in, fasta)
+
     // Mix intervals and no_intervals channels together
-    vcf = MERGE_FREEBAYES.out.vcf.mix(bcftools_vcf_out.no_intervals)
+    vcf = BCFTOOLS_NORM.out.vcf.mix(bcftools_vcf_out.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf ] }
 
     versions = versions.mix(BCFTOOLS_SORT.out.versions)
+    versions = versions.mix(BCFTOOLS_NORM.out.versions)
     versions = versions.mix(MERGE_FREEBAYES.out.versions)
     versions = versions.mix(FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES.out.versions)

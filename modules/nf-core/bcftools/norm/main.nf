@@ -21,7 +21,7 @@ process BCFTOOLS_NORM {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: '--output-type v --multiallelics -'
+    def args = task.ext.args ?: '--output-type z --write-index=tbi --multiallelics -'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
                     args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
@@ -44,7 +44,7 @@ process BCFTOOLS_NORM {
     """
 
     stub:
-    def args = task.ext.args ?: '--output-type z'
+    def args = task.ext.args ?: '--output-type v'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
                     args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
