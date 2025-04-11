@@ -67,6 +67,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_haplotyper  = Channel.empty()
     vcf_strelka              = Channel.empty()
     vcf_tiddit               = Channel.empty()
+    bam_haplotypecaller      = Channel.empty()
 
     // BCFTOOLS MPILEUP
     if (tools.split(',').contains('mpileup')) {
@@ -136,6 +137,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
         tbi_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.tbi
+        bam_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.realigned_bam
 
         versions = versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
 
@@ -379,6 +381,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_dnascope
     vcf_sentieon_haplotyper
     vcf_tiddit
+    bam_haplotypecaller
 
     versions
 }
