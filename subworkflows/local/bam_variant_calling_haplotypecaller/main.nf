@@ -5,8 +5,10 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { BAM_MERGE_INDEX_SAMTOOLS                            } from '../bam_merge_index_samtools/main'
+include { BCFTOOLS_NORM                                       } from '../../../modules/nf-core/bcftools/norm/main'
 include { GATK4_HAPLOTYPECALLER                               } from '../../../modules/nf-core/gatk4/haplotypecaller/main'
 include { GATK4_MERGEVCFS            as MERGE_HAPLOTYPECALLER } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { TABIX_TABIX             as TABIX_VC_HAPLOTYPECALLER } from '../../../modules/nf-core/tabix/tabix/main'
 
 workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     take:
@@ -75,12 +77,17 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     // Only when using intervals
     MERGE_HAPLOTYPECALLER(haplotypecaller_vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple(), dict)
 
+    // Normalization
+    norm_multi_in = MERGE_HAPLOTYPECALLER.out.vcf.map{meta, vcf -> return [meta, vcf, []]}
+    BCFTOOLS_NORM(norm_multi_in, fasta)
+    TABIX_VC_HAPLOTYPECALLER(BCFTOOLS_NORM.out.vcf)
+
     haplotypecaller_vcf = Channel.empty().mix(
-            MERGE_HAPLOTYPECALLER.out.vcf,
+            BCFTOOLS_NORM.out.vcf,
             haplotypecaller_vcf.no_intervals)
 
     haplotypecaller_tbi = Channel.empty().mix(
-            MERGE_HAPLOTYPECALLER.out.tbi,
+            TABIX_VC_HAPLOTYPECALLER.out.tbi,
             haplotypecaller_tbi.no_intervals)
 
     // BAM output
