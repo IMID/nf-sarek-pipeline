@@ -4,9 +4,11 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
+include { BCFTOOLS_NORM                             } from '../../../modules/nf-core/bcftools/norm/main'
 include { DEEPVARIANT_RUNDEEPVARIANT                } from '../../../modules/nf-core/deepvariant/rundeepvariant/main'
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_GVCF } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_VCF  } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { TABIX_TABIX     as TABIX_VC_DEEPVARIANT   } from '../../../modules/nf-core/tabix/tabix/main'
 
 // Deepvariant: https://github.com/google/deepvariant/issues/510
 workflow BAM_VARIANT_CALLING_DEEPVARIANT {
@@ -47,6 +49,11 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
 
     MERGE_DEEPVARIANT_GVCF(gvcf_to_merge, dict)
     MERGE_DEEPVARIANT_VCF(vcf_to_merge, dict)
+    
+    norm_multi_in = MERGE_DEEPVARIANT_VCF.out.vcf.map{meta, vcf -> return [meta, vcf, []]}
+    //fasta_in = fasta.map{fasta -> return [[], fasta]}
+    BCFTOOLS_NORM(norm_multi_in, fasta)
+    TABIX_VC_DEEPVARIANT(BCFTOOLS_NORM.out.vcf)
 
     // Mix intervals and no_intervals channels together
     gvcf = Channel.empty().mix(MERGE_DEEPVARIANT_GVCF.out.vcf, gvcf_out.no_intervals)
@@ -54,7 +61,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'deepvariant' ], vcf ] }
 
     // Mix intervals and no_intervals channels together
-    vcf = Channel.empty().mix(MERGE_DEEPVARIANT_VCF.out.vcf, vcf_out.no_intervals)
+    vcf = Channel.empty().mix(BCFTOOLS_NORM.out.vcf, vcf_out.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'deepvariant' ], vcf ] }
 
