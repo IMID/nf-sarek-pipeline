@@ -22,7 +22,7 @@ process BCFTOOLS_NORM {
 
     script:
     def args = task.ext.args ?: '--output-type z --write-index=tbi --multiallelics -'
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.${meta.variantcaller ?: 'unknown'}"
     def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
                     args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
                     args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :

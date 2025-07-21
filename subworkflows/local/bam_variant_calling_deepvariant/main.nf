@@ -50,7 +50,10 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     MERGE_DEEPVARIANT_GVCF(gvcf_to_merge, dict)
     MERGE_DEEPVARIANT_VCF(vcf_to_merge, dict)
     
-    norm_multi_in = MERGE_DEEPVARIANT_VCF.out.vcf.map{meta, vcf -> return [meta, vcf, []]}
+    norm_multi_in = MERGE_DEEPVARIANT_VCF.out.vcf.map{ meta, vcf -> 
+        def new_meta = meta + [ variantcaller: 'deepvariant_normalized' ]
+        return [ new_meta, vcf, [] ] 
+    }
     //fasta_in = fasta.map{fasta -> return [[], fasta]}
     BCFTOOLS_NORM(norm_multi_in, fasta)
     TABIX_VC_DEEPVARIANT(BCFTOOLS_NORM.out.vcf)

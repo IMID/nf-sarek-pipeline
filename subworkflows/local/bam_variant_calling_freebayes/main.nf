@@ -43,7 +43,10 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     // Only when no_intervals
     TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals)
 
-    norm_multi_in = MERGE_FREEBAYES.out.vcf.map{meta, vcf -> return [meta, vcf, []]}
+    norm_multi_in = MERGE_FREEBAYES.out.vcf.map{ meta, vcf -> 
+        def new_meta = meta + [ variantcaller: 'freebayes_normalized' ]
+        return [ new_meta, vcf, [] ] 
+    }
 
     BCFTOOLS_NORM(norm_multi_in, fasta)
 

@@ -50,7 +50,10 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     MERGE_STRELKA_GENOME(genome_vcf_to_merge, dict)
 
     // Normalization
-    norm_multi_in = MERGE_STRELKA.out.vcf.map{meta, vcf -> return [meta, vcf, []]}
+    norm_multi_in = MERGE_STRELKA.out.vcf.map{ meta, vcf -> 
+        def new_meta = meta + [ variantcaller: 'strelka_normalized' ]
+        return [ new_meta, vcf, [] ] 
+    }
     fasta_in = fasta.map{fasta -> return [[], fasta]}
     BCFTOOLS_NORM(norm_multi_in, fasta_in)
     TABIX_VC_STRELKA(BCFTOOLS_NORM.out.vcf)

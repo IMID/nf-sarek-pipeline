@@ -78,7 +78,10 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     MERGE_HAPLOTYPECALLER(haplotypecaller_vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple(), dict)
 
     // Normalization
-    norm_multi_in = MERGE_HAPLOTYPECALLER.out.vcf.map{meta, vcf -> return [meta, vcf, []]}
+    norm_multi_in = MERGE_HAPLOTYPECALLER.out.vcf.map{ meta, vcf -> 
+        def new_meta = meta + [ variantcaller: 'haplotypecaller_normalized' ]
+        return [ new_meta, vcf, [] ] 
+    }
     BCFTOOLS_NORM(norm_multi_in, fasta)
     TABIX_VC_HAPLOTYPECALLER(BCFTOOLS_NORM.out.vcf)
 
